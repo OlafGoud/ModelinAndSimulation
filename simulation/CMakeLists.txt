@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.15)
-project(OpenGLSample VERSION 1.0 LANGUAGES CXX)
+project(OpenGLSimulation VERSION 1.0 LANGUAGES CXX)
 
 # -------------------------
 # C++ standard
 # -------------------------
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # -------------------------
@@ -75,24 +75,11 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(stb)
 
-# ----- Nuklear -----
-FetchContent_Declare(
-    nuklear
-    GIT_REPOSITORY https://github.com/Immediate-Mode-UI/Nuklear.git
-    GIT_TAG master
-)
-FetchContent_MakeAvailable(nuklear)
-
 # -------------------------
 # Target
 # -------------------------
 add_executable(${PROJECT_NAME} 
     src/main.cpp 
-    src/textrenderer.cpp
-    src/render.cpp
-    src/callback.cpp
-    src/terrain.cpp
-    src/vehiclemovement.cpp
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
@@ -103,7 +90,6 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 target_include_directories(${PROJECT_NAME} PRIVATE 
     ${PROJECT_SOURCE_DIR}/include
     ${glm_SOURCE_DIR}
-    ${nuklear_SOURCE_DIR}
     ${stb_SOURCE_DIR}  
 
 )
@@ -119,7 +105,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 # -------------------------
 # Resources
 # -------------------------
-file(COPY ${CMAKE_SOURCE_DIR}/src/shaders DESTINATION ${CMAKE_BINARY_DIR})
+# file(COPY ${CMAKE_SOURCE_DIR}/src/shaders DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY ${CMAKE_SOURCE_DIR}/resources DESTINATION ${CMAKE_BINARY_DIR})
 
 # -------------------------
