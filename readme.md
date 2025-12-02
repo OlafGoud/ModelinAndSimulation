@@ -5,7 +5,7 @@ A excerse for Hogeschool Rotterdam, class Modeling & simulation.
 
 Windows, cmake 3.15, visual studio 2022
 ```sh
-cd .\simulation\build\
+cd .\simulation\
 mkdir build
 cd .\build\
 cmake .. -G "Visual Studio 17 2022" -A x64
