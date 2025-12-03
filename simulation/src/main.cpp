@@ -2,6 +2,8 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+#include "renderer.h"
+
 struct ScreenMode {
   GLFWmonitor* monitor;
   GLFWvidmode* mode;
@@ -9,7 +11,6 @@ struct ScreenMode {
 
 GLFWwindow* setWindowBorderless() {
   GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-
   const GLFWvidmode* mode = glfwGetVideoMode(monitor);
  
   glfwWindowHint(GLFW_RED_BITS, mode->redBits);
@@ -20,6 +21,10 @@ GLFWwindow* setWindowBorderless() {
   glfwGetMonitorPos(monitor, &x, &y);
 
   GLFWwindow *window = glfwCreateWindow(mode->width, mode->height, "My Title", monitor, NULL);
+  if(!window) {
+    glfwTerminate();
+    return window;
+  }
   glfwSetWindowPos(window, x, y);
   glfwMakeContextCurrent(window);
 
@@ -40,13 +45,25 @@ int main() {
   glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 
   GLFWwindow *window = setWindowBorderless();
-  if(!window) {
-    glfwTerminate();
+  if(!window) return -1; /** already terminated by function setWindowBorderless() */
+
+
+  /** Setting input */
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
+
+  stbi_set_flip_vertically_on_load(true);
+
+  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+    std::cerr << "Failed to initialize GLAD\n";
     return -1;
   }
 
 
-  std::cout << "HELLO\n";
 
+
+
+
+  glfwTerminate();
   return 0;
 }
