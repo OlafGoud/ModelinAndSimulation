@@ -80,6 +80,7 @@ FetchContent_MakeAvailable(stb)
 # -------------------------
 add_executable(${PROJECT_NAME} 
     src/main.cpp 
+    src/renderer.cpp
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
