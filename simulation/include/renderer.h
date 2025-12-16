@@ -1,11 +1,21 @@
-/*#include <glad/glad.h>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-#ifndef STB_IMAGE_IMPLEMENTATION
-#define STB_IMAGE_IMPLEMENTATION
-#endif
-#include <stb_image.h>
 #include <vector>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include "model.h"
+#include "shader.h"
 
-unsigned int loadTexture(char const* path);
-*/
+
+struct ModelData {
+  Model model;
+  glm::vec3 pos;
+  glm::vec3 scale;
+  glm::vec3 rot;
+  float angle;
+};
+
+
+
+void renderModel(ModelData &data, glm::mat4 projection, glm::mat4 view, Shader &shader);

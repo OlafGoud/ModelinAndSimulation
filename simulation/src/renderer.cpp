@@ -1,38 +1,22 @@
-/*#include "renderer.h"
+#include "renderer.h"
 
-*/
-/** 
- * Function to load a texture.
- * @param path char* to the place of the file.
- * @returns a index for the texture.
- * @note function from https://learnopengl.com 
- *//*
-unsigned int loadTexture(char const* path) {
-  unsigned int textureID;
-  glGenTextures(1, &textureID);
+void renderModel(ModelData &data, glm::mat4 projection, glm::mat4 view, Shader &shader) {
 
-  int width, height, nrComponents;
-  unsigned char *data = stbi_load(path, &width, &height, &nrComponents, 0);
-  if (data) {
-    GLenum format;
-    if (nrComponents == 1)
-        format = GL_RED;
-    else if (nrComponents == 3)
-        format = GL_RGB;
-    else if (nrComponents == 4)
-        format = GL_RGBA;
+  shader.use();
 
-    glBindTexture(GL_TEXTURE_2D, textureID);
-    GLenum internalFormat = (nrComponents == 4) ? GL_RGBA : GL_RGB;
-    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+  shader.setMat4("projection", projection);
+  shader.setMat4("view", view);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  } else {
-    std::cout << "Texture failed to load at path: " << path << std::endl;
-  }
-  stbi_image_free(data);
 
-  return textureID;
+  glm::mat4 model = glm::mat4(1.0f);
+  model = glm::translate(model, data.pos); // translate it down so it's at the center of the scene
+  model = glm::scale(model, data.scale);	// it's a bit too big for our scene, so scale it down
+  //model = glm::rotate(model, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+  shader.setMat4("model", model);
+
+
+  data.model.Draw(shader);
+
+
+
 }
-*/

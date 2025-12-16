@@ -1,6 +1,6 @@
 #ifndef MESH_H
 #define MESH_H
-/** class from learnopengl.com */
+/** header from learnopengl.com */
 
 #include <glad/glad.h> // holds all OpenGL type declarations
 

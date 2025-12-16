@@ -1,6 +1,6 @@
 #ifndef SHADER_H
 #define SHADER_H
-/** class from learnopengl.com */
+/** header from learnopengl.com */
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>

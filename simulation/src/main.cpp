@@ -4,10 +4,14 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#ifndef STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
+#endif
 
 #include "renderer.h"
-#include "model.h"
 #include "shader.h"
+#include "callback.h"
+#include "camera.h"
 
 struct ScreenMode {
   GLFWmonitor* monitor;
@@ -16,6 +20,10 @@ struct ScreenMode {
 
 const unsigned int SCR_WIDTH = 1920;
 const unsigned int SCR_HEIGHT = 1080;
+float deltaTime{};
+float lastX = SCR_WIDTH / 2.0f;
+float lastY = SCR_HEIGHT / 2.0f;
+bool firstMouse = true;   
 
 
 GLFWwindow* setWindowBorderless() {
@@ -40,6 +48,7 @@ GLFWwindow* setWindowBorderless() {
   return window;
 }
 
+Camera camera;
 
 
 int main() {
@@ -58,7 +67,10 @@ int main() {
 
 
   /** Setting input */
-  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+  glfwSetCursorPosCallback(window, mouse_callback);
+  glfwSetScrollCallback(window, scroll_callback);
 
 
   stbi_set_flip_vertically_on_load(true);
@@ -69,39 +81,36 @@ int main() {
   }
 
 
-  Shader modelShader("resources\\shaders\\model.vs", "resources\\shaders\\model.fs");
+  Shader modelShader("resources/shaders/model.vs", "resources/shaders/model.fs");
   std::cout << "loaded";
-  Model axe("resources\\models\\hatchet.obj");
+
+  ModelData detectie {Model("resources/models/detectie.obj"), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(2.0f, 1.4f, 3.0f), glm::vec3(0.0f), 0.0f};
+  ModelData lamp {Model("resources/models/lamp.obj"), glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(1.2f, 1.2f, 1.2f), glm::vec3(0.0f), 0.0f};
+  ModelData checkerboard {Model("resources/models/groundpane.obj"), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(5.0f, 5.0f, 5.0f), glm::vec3(0.0f), 0.0f};
+  ModelData human {Model("resources/models/human.obj"), glm::vec3(10.0f, 0.0f, 0.0f), glm::vec3(1.0f), glm::vec3(0.0f), 0.0f};
+
 
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-
   float lastTime = glfwGetTime();
   while (!glfwWindowShouldClose(window)) {
     float currentTime = static_cast<float>(glfwGetTime());
-    float deltaTime = currentTime - lastTime;
+    deltaTime = currentTime - lastTime;
     lastTime = currentTime;
-
+    processInput(window);
     glClearColor(0.01f, 0.01f, 0.01f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    modelShader.use();
 
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-    glm::mat4 view = glm::lookAt(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    modelShader.setMat4("projection", projection);
-    modelShader.setMat4("view", view);
-
-
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(0.0f, 0.0f, -3.0f)); // translate it down so it's at the center of the scene
-    model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
-    model = glm::rotate(model, glm::radians(40.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    modelShader.setMat4("model", model);
-    axe.Draw(modelShader);
-
+    glm::mat4 projection = glm::perspective(camera.Zoom, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
+    glm::mat4 view = camera.GetViewMatrix();
+    
+    renderModel(detectie, projection, view, modelShader);
+    renderModel(lamp, projection, view, modelShader);
+    renderModel(checkerboard, projection, view, modelShader);
+    renderModel(human, projection, view, modelShader);
 
 
     glfwSwapBuffers(window);

@@ -11,7 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # MSVC runtime library
 # -------------------------
 if(MSVC)
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 
 # -------------------------
@@ -23,9 +23,9 @@ include(FetchContent)
 
 # ----- GLAD -----
 FetchContent_Declare(
-    glad
-    GIT_REPOSITORY https://github.com/Dav1dde/glad.git
-    GIT_TAG master
+  glad
+  GIT_REPOSITORY https://github.com/Dav1dde/glad.git
+  GIT_TAG master
 )
 FetchContent_MakeAvailable(glad)
 
@@ -37,41 +37,41 @@ set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
 set(GLFW_USE_MSVC_RUNTIME_LIBRARY TRUE CACHE BOOL "" FORCE)
 
 FetchContent_Declare(
-    glfw
-    GIT_REPOSITORY https://github.com/glfw/glfw.git
-    GIT_TAG latest
+  glfw
+  GIT_REPOSITORY https://github.com/glfw/glfw.git
+  GIT_TAG latest
 )
 FetchContent_MakeAvailable(glfw)
 
 # ----- FreeType -----
 FetchContent_Declare(
-    freetype
-    GIT_REPOSITORY https://github.com/freetype/freetype.git
-    GIT_TAG VER-2-13-1
+  freetype
+  GIT_REPOSITORY https://github.com/freetype/freetype.git
+  GIT_TAG VER-2-13-1
 )
 FetchContent_MakeAvailable(freetype)
 
 # ----- Assimp -----
 FetchContent_Declare(
-    assimp
-    GIT_REPOSITORY https://github.com/assimp/assimp.git
-    GIT_TAG master
+  assimp
+  GIT_REPOSITORY https://github.com/assimp/assimp.git
+  GIT_TAG master
 )
 FetchContent_MakeAvailable(assimp)
 
 # ----- GLM -----
 FetchContent_Declare(
-    glm
-    GIT_REPOSITORY https://github.com/g-truc/glm.git
-    GIT_TAG master
+  glm
+  GIT_REPOSITORY https://github.com/g-truc/glm.git
+  GIT_TAG master
 )
 FetchContent_MakeAvailable(glm)
 
 # ----- STB -----
 FetchContent_Declare(
-    stb
-    GIT_REPOSITORY https://github.com/nothings/stb.git
-    GIT_TAG master
+  stb
+  GIT_REPOSITORY https://github.com/nothings/stb.git
+  GIT_TAG master
 )
 FetchContent_MakeAvailable(stb)
 
@@ -79,28 +79,28 @@ FetchContent_MakeAvailable(stb)
 # Target
 # -------------------------
 add_executable(${PROJECT_NAME} 
-    src/main.cpp 
-    src/renderer.cpp
+  src/main.cpp 
+  src/renderer.cpp
+  src/callback.cpp
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
-    PROJECT_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
-    PROJECT_BINARY_DIR="${CMAKE_BINARY_DIR}"
+  PROJECT_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
+  PROJECT_BINARY_DIR="${CMAKE_BINARY_DIR}"
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE 
-    ${PROJECT_SOURCE_DIR}/include
-    ${glm_SOURCE_DIR}
-    ${stb_SOURCE_DIR}  
-
+  ${PROJECT_SOURCE_DIR}/include
+  ${glm_SOURCE_DIR}
+  ${stb_SOURCE_DIR}  
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    OpenGL::GL
-    glad
-    glfw
-    freetype
-    assimp
+  OpenGL::GL
+  glad
+  glfw
+  freetype
+  assimp
 )
 
 # -------------------------
